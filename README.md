@@ -258,7 +258,7 @@ Add both redirect URIs:
 
 ```text
 http://localhost:3000/api/auth/callback/google
-https://YOUR_DOMAIN/api/auth/callback/google
+https://vulcanlcs.vercel.app/api/auth/callback/google
 ```
 
 Copy the client ID and secret into `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`.
@@ -285,12 +285,12 @@ Without a Blob token, the rest of the app runs, but photo uploads return a confi
 ```dotenv
 SCHOOL_DOMAIN="school.edu"
 ADMIN_EMAILS="librarian@school.edu,head.librarian@school.edu"
-SCHOOL_TIME_ZONE="Europe/London"
+SCHOOL_TIME_ZONE="Africa/Nairobi"
 ```
 
 - `SCHOOL_DOMAIN` is stored without the leading `@`.
 - `ADMIN_EMAILS` is comma-separated. These accounts are always admins.
-- `SCHOOL_TIME_ZONE` is an IANA timezone and controls greetings, dates, door clocks, history day boundaries, and grant end dates. It defaults to `Europe/London`.
+- `SCHOOL_TIME_ZONE` is an IANA timezone and controls greetings, dates, door clocks, history day boundaries, and grant end dates. It defaults to `Europe/London` when unset; this deployment uses `Africa/Nairobi`.
 
 ### 7. Set the door and public URL values
 
@@ -375,7 +375,7 @@ AUTH_GOOGLE_SECRET="replace-me"
 
 SCHOOL_DOMAIN="school.edu"
 ADMIN_EMAILS="librarian@school.edu"
-SCHOOL_TIME_ZONE="Europe/London"
+SCHOOL_TIME_ZONE="Africa/Nairobi"
 
 BLOB_READ_WRITE_TOKEN="vercel_blob_rw_..."
 BLOB_STORE_ID=""
@@ -522,7 +522,7 @@ The inside ledger polls `/api/admin/inside` every five seconds, so new visits an
 
 Vercel Cron sends GET, so the route exports both GET and POST. POST is useful for a manual run or another scheduler.
 
-> **Cron schedule warning:** `vercel.json` currently schedules the job at `0 18 * * *`. That is a placeholder. It runs daily at 18:00 UTC, which is 21:00 in Nairobi. Replace the schedule with the library's real closing time before production. Vercel Cron schedules are in UTC; a school in a daylight-saving timezone must adjust the schedule or use a scheduler that understands `SCHOOL_TIME_ZONE`.
+> **Cron schedule:** `vercel.json` schedules the job at `30 19 * * *`, which is 22:30 in `Africa/Nairobi` (19:30 UTC). Vercel Cron schedules are in UTC. Nairobi does not observe daylight saving, so this needs no seasonal adjustment; a school in a DST zone would.
 
 ### Confirmation pass
 
@@ -750,14 +750,14 @@ The CSV is UTF-8 with a BOM and CRLF line endings for Excel compatibility. Colum
 Manual auto-close run:
 
 ```bash
-curl -X POST https://YOUR_DOMAIN/api/cron/auto-close \
+curl -X POST https://vulcanlcs.vercel.app/api/cron/auto-close \
   -H "Authorization: Bearer $CRON_SECRET"
 ```
 
 Successful response:
 
 ```json
-{ "closed": 4, "checkedAt": "2026-11-09T18:00:00.000Z" }
+{ "closed": 4, "checkedAt": "2026-11-09T19:30:00.000Z" }
 ```
 
 ---
@@ -968,8 +968,9 @@ Import the repository and add every required variable under **Project → Settin
 Production-specific values:
 
 ```dotenv
-AUTH_URL="https://vulcan.school.edu"
-NEXT_PUBLIC_APP_URL="https://vulcan.school.edu"
+AUTH_URL="https://vulcanlcs.vercel.app"
+NEXT_PUBLIC_APP_URL="https://vulcanlcs.vercel.app"
+SCHOOL_TIME_ZONE="Africa/Nairobi"
 NEXT_PUBLIC_DEMO_MODE="false"
 ```
 
@@ -980,7 +981,7 @@ NEXT_PUBLIC_DEMO_MODE="false"
 Add the production redirect URI in Google Cloud Console:
 
 ```text
-https://vulcan.school.edu/api/auth/callback/google
+https://vulcanlcs.vercel.app/api/auth/callback/google
 ```
 
 Publish the OAuth consent screen or keep the test-user list current.
@@ -991,20 +992,20 @@ Create a public Blob store and add `BLOB_READ_WRITE_TOKEN`. Leave `BLOB_STORE_ID
 
 ### 6. Configure the cron job
 
-`vercel.json` schedules `/api/cron/auto-close`. Replace the placeholder:
+`vercel.json` schedules `/api/cron/auto-close` at the library's closing time:
 
 ```json
 {
   "crons": [
     {
       "path": "/api/cron/auto-close",
-      "schedule": "0 18 * * *"
+      "schedule": "30 19 * * *"
     }
   ]
 }
 ```
 
-The schedule is in UTC. `0 18 * * *` is **not** the real closing time; replace it. If the school observes daylight saving, adjust the schedule seasonally or use an external scheduler that understands `SCHOOL_TIME_ZONE`.
+The schedule is in UTC. `30 19 * * *` is **22:30 in `Africa/Nairobi`** (19:30 UTC). Nairobi does not observe daylight saving, so no adjustment is needed. If you move the school to a DST timezone, adjust the schedule seasonally or use an external scheduler that understands `SCHOOL_TIME_ZONE`.
 
 ### 7. Deploy
 
@@ -1062,7 +1063,7 @@ order by v.entry_at;
 ### Run auto-close manually
 
 ```bash
-curl -X POST https://YOUR_DOMAIN/api/cron/auto-close \
+curl -X POST https://vulcanlcs.vercel.app/api/cron/auto-close \
   -H "Authorization: Bearer $CRON_SECRET"
 ```
 
@@ -1152,7 +1153,7 @@ Server errors are logged with `console.error` and appear in the Vercel function 
 - **In-process rate limiting.** Serverless instances do not share memory. A hard cross-instance quota needs a shared store such as Upstash Redis.
 - **Gatekeeper revocation lag.** Door pages and door APIs use the cached JWT role, so a revoked gatekeeper may retain access for up to five minutes. The librarian area is immediate.
 - **Single school.** The deployment is configured for one `SCHOOL_DOMAIN` and one timezone. Multi-tenant support would require schema and configuration changes.
-- **Cron is UTC.** The schedule does not follow daylight saving automatically. Adjust it seasonally or use an external scheduler.
+- **Cron is UTC.** The schedule is set to `30 19 * * *` (22:30 EAT / 19:30 UTC). It does not follow daylight saving automatically; a school in a DST zone must adjust it seasonally or use an external scheduler.
 - **No automated tests yet.** Typecheck, lint, and manual flows are the current safety net. Add unit tests for scan state transitions and timezone boundaries, and integration tests for the API guards.
 - **Public photo URLs.** Laptop and serial photos are publicly readable by URL. They are not indexed, but they are not private.
 - **No offline mode.** The door needs a network connection to issue codes and write visits.
