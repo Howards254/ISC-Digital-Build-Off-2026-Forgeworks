@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { GoogleLogo } from "@phosphor-icons/react/dist/ssr";
 
+import { signInWithSchoolAccount } from "@/app/actions";
 import { auth } from "@/auth";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { UserMenu } from "@/components/user-menu";
@@ -45,12 +47,19 @@ export async function TopBar() {
               role={role ?? session.user.role}
             />
           ) : (
-            <Link
-              href="/#sign-in"
-              className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-semibold text-ink underline decoration-rule decoration-1 underline-offset-4 transition-colors duration-150 hover:text-forest hover:decoration-forest"
-            >
-              Sign in
-            </Link>
+            <form action={signInWithSchoolAccount} className="shrink-0">
+              <button
+                type="submit"
+                className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-md px-3 text-sm font-semibold text-ink underline decoration-rule decoration-1 underline-offset-4 transition-colors duration-150 hover:text-forest hover:decoration-forest"
+              >
+                <GoogleLogo
+                  aria-hidden="true"
+                  size={16}
+                  weight="regular"
+                />
+                Sign in
+              </button>
+            </form>
           )}
         </div>
       </div>
