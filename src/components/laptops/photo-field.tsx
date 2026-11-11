@@ -121,7 +121,7 @@ export function PhotoField({
           )}
         </p>
         {required ? (
-          <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-muted">
+          <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-muted">
             Required
           </span>
         ) : null}
@@ -147,7 +147,7 @@ export function PhotoField({
           ) : (
             <div className="flex size-full flex-col items-center justify-center gap-2 text-ink-muted">
               <ImageSquare aria-hidden="true" size={30} weight="duotone" />
-              <span className="font-mono text-[9px] uppercase tracking-[0.12em]">
+              <span className="font-mono text-[10px] uppercase tracking-[0.12em]">
                 No photo
               </span>
             </div>
@@ -155,7 +155,7 @@ export function PhotoField({
 
           {processing ? (
             <div className="absolute inset-0 grid place-items-center bg-paper/85 text-forest">
-              <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em]">
+              <span className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.12em]">
                 <SpinnerGap
                   aria-hidden="true"
                   size={15}
@@ -201,14 +201,14 @@ export function PhotoField({
             ) : null}
           </div>
 
-          <p className="mt-2 font-mono text-[10px] leading-5 text-ink-muted">
+          <p className="mt-2 font-mono text-[11px] leading-5 text-ink-muted">
             JPEG, PNG, or WebP · up to 5 MB
             <br />
             Resized to about 1200px wide before upload.
           </p>
 
           {selectedSize !== null && !processing ? (
-            <p className="mt-1 font-mono text-[10px] leading-5 text-ink-muted">
+            <p className="mt-1 font-mono text-[11px] leading-5 text-ink-muted">
               Selected file: {formatFileSize(selectedSize)}
             </p>
           ) : null}

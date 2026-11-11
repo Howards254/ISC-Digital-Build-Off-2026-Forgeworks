@@ -49,7 +49,7 @@ function CompactHistory({ rows }: { rows: AdminHistoryRow[] }) {
                   <span className="text-forest">Inside</span>
                 )}
               </p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+              <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                 {formatDayMonth(row.entryAt)} ·{" "}
                 {formatDuration(row.entryAt, row.exitAt)}
               </p>
@@ -62,7 +62,7 @@ function CompactHistory({ rows }: { rows: AdminHistoryRow[] }) {
               <p className="font-display text-[1.25rem] leading-tight tracking-[-0.01em] text-ink">
                 {row.name}
               </p>
-              <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+              <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                 {row.admissionNumber ?? "No admission"}
               </p>
             </div>
@@ -73,21 +73,21 @@ function CompactHistory({ rows }: { rows: AdminHistoryRow[] }) {
                   <p className="text-sm leading-5 text-ink">
                     {row.deviceModel ?? "Loose laptop"}
                   </p>
-                  <p className="mt-0.5 break-all font-mono text-[9px] uppercase tracking-[0.06em] text-ink-muted">
+                  <p className="mt-0.5 break-all font-mono text-[10px] uppercase tracking-[0.06em] text-ink-muted">
                     {row.deviceSerial
                       ? row.deviceSerial
                       : `Loose · ${row.looseSerial}`}
                   </p>
                 </>
               ) : (
-                <p className="font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+                <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                   No device
                 </p>
               )}
             </div>
           </div>
 
-          <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
             In <span className="text-forest">{row.entryMethod}</span>
             <span className="px-1.5">·</span>
             Out{" "}
@@ -141,7 +141,7 @@ export default async function AdminHistoryPage({
   return (
     <div>
       <header className="border-b border-rule pb-7 sm:pb-9">
-        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
           <p>Visit ledger</p>
           <p>The reading room archive</p>
         </div>
@@ -170,7 +170,7 @@ export default async function AdminHistoryPage({
         className="mt-6 border-y border-rule py-5"
       >
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+          <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
             <FunnelSimple aria-hidden="true" size={14} weight="regular" />
             Filter the ledger
           </p>
@@ -250,11 +250,11 @@ export default async function AdminHistoryPage({
       </form>
 
       <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2">
-        <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
           {result.total} {result.total === 1 ? "visit" : "visits"}
           {filtered ? " · filtered" : " · today"}
         </p>
-        <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
           {filters.from === filters.to
             ? filters.from
             : `${filters.from} → ${filters.to}`}
@@ -299,7 +299,7 @@ export default async function AdminHistoryPage({
                   <th
                     key={label}
                     scope="col"
-                    className="px-3 py-2.5 font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-ink-muted first:pl-1 last:pr-1"
+                    className="px-3 py-2.5 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-ink-muted first:pl-1 last:pr-1"
                   >
                     {label}
                   </th>
@@ -314,7 +314,7 @@ export default async function AdminHistoryPage({
                     <p className="font-mono text-[11px] leading-5 tracking-[0.04em] text-ink">
                       {formatClock(row.entryAt)}
                     </p>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                       {formatDayMonth(row.entryAt)}
                     </p>
                   </td>
@@ -325,7 +325,7 @@ export default async function AdminHistoryPage({
                         <p className="font-mono text-[11px] leading-5 tracking-[0.04em] text-ink">
                           {formatClock(row.exitAt)}
                         </p>
-                        <p className="font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+                        <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                           {formatDayMonth(row.exitAt)}
                         </p>
                       </>
@@ -342,7 +342,7 @@ export default async function AdminHistoryPage({
                     <p className="font-display text-[1.15rem] leading-tight tracking-[-0.01em] text-ink">
                       {row.name}
                     </p>
-                    <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                       {row.admissionNumber ?? "No admission"}
                     </p>
                   </td>
@@ -353,14 +353,14 @@ export default async function AdminHistoryPage({
                         <p className="text-sm leading-5 text-ink">
                           {row.deviceModel ?? "Loose laptop"}
                         </p>
-                        <p className="mt-0.5 break-all font-mono text-[9px] uppercase tracking-[0.06em] text-ink-muted">
+                        <p className="mt-0.5 break-all font-mono text-[10px] uppercase tracking-[0.06em] text-ink-muted">
                           {row.deviceSerial
                             ? row.deviceSerial
                             : `Loose · ${row.looseSerial}`}
                         </p>
                       </>
                     ) : (
-                      <span className="font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+                      <span className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                         No device
                       </span>
                     )}
@@ -371,7 +371,7 @@ export default async function AdminHistoryPage({
                   </td>
 
                   <td className="whitespace-nowrap px-3 py-3.5 align-top last:pr-1">
-                    <dl className="space-y-1 font-mono text-[9px] uppercase tracking-[0.08em]">
+                    <dl className="space-y-1 font-mono text-[10px] uppercase tracking-[0.08em]">
                       <div className="flex items-center gap-1.5">
                         <dt className="text-ink-muted">In</dt>
                         <dd className="text-forest">{row.entryMethod}</dd>

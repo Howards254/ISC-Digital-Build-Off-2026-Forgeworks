@@ -79,7 +79,7 @@ export default async function AuthErrorPage({
         </div>
 
         <div className="border-t border-rule pt-5 lg:mt-2">
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
             Refused entry
           </p>
           <div className="mt-4 space-y-3 font-mono text-[11px] leading-5">

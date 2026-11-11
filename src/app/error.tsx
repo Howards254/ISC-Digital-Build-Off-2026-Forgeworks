@@ -46,7 +46,7 @@ export default function ErrorPage({
           </Link>
         </div>
 
-        <p className="mt-7 border-t border-rule pt-4 font-mono text-[10px] uppercase leading-5 tracking-[0.1em] text-ink-muted">
+        <p className="mt-7 border-t border-rule pt-4 font-mono text-[11px] uppercase leading-5 tracking-[0.1em] text-ink-muted">
           If the ink stays blurred, tell the librarian
           {error.digest ? ` · reference ${error.digest}` : ""}.
         </p>

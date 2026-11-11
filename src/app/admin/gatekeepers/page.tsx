@@ -28,7 +28,7 @@ function CompactGrants({ grants }: { grants: AdminRoleGrant[] }) {
               <p className="break-all font-mono text-[11px] leading-5 text-ink">
                 {grant.email}
               </p>
-              <p className="mt-1 break-all font-mono text-[9px] uppercase leading-4 tracking-[0.08em] text-ink-muted">
+              <p className="mt-1 break-all font-mono text-[10px] uppercase leading-4 tracking-[0.08em] text-ink-muted">
                 Granted by {grant.createdBy}
               </p>
             </div>
@@ -38,7 +38,7 @@ function CompactGrants({ grants }: { grants: AdminRoleGrant[] }) {
           </div>
 
           <div className="mt-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-            <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
+            <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-muted">
               {grant.endsAt
                 ? `Ends ${formatShortDate(grant.endsAt)}`
                 : "No end date"}
@@ -57,7 +57,7 @@ export default async function AdminGatekeepersPage() {
   return (
     <div>
       <header className="border-b border-rule pb-7 sm:pb-9">
-        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
           <p>Desk permissions</p>
           <p>Checked on every request</p>
         </div>
@@ -109,7 +109,7 @@ export default async function AdminGatekeepersPage() {
           >
             Current grants
           </h2>
-          <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+          <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
             role_grants
           </p>
         </div>
@@ -143,7 +143,7 @@ export default async function AdminGatekeepersPage() {
                         <th
                           key={label}
                           scope="col"
-                          className="px-3 py-2.5 font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-ink-muted first:pl-1 last:pr-1"
+                          className="px-3 py-2.5 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-ink-muted first:pl-1 last:pr-1"
                         >
                           {label}
                         </th>
@@ -167,13 +167,13 @@ export default async function AdminGatekeepersPage() {
                           {grant.role}
                         </span>
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 align-top font-mono text-[10px] uppercase tracking-[0.06em] text-ink-muted">
+                      <td className="whitespace-nowrap px-3 py-4 align-top font-mono text-[11px] uppercase tracking-[0.06em] text-ink-muted">
                         {grant.endsAt
                           ? formatShortDate(grant.endsAt)
                           : "No end date"}
                       </td>
                       <td className="max-w-[17rem] px-3 py-4 align-top">
-                        <p className="break-all font-mono text-[10px] leading-5 text-ink-muted">
+                        <p className="break-all font-mono text-[11px] leading-5 text-ink-muted">
                           {grant.createdBy}
                         </p>
                       </td>

@@ -37,7 +37,7 @@ export default async function AdminLaptopsPage({
   return (
     <div>
       <header className="border-b border-rule pb-7 sm:pb-9">
-        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
           <p>Laptop register</p>
           <p>Follow the serial</p>
         </div>
@@ -118,11 +118,11 @@ export default async function AdminLaptopsPage({
       ) : (
         <>
           <div className="mt-7 flex flex-wrap items-center justify-between gap-3 border-y border-rule py-3">
-            <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+            <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
               <Barcode aria-hidden="true" size={15} weight="regular" />
               {serial}
             </p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+            <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
               {trail?.visits.length ?? 0}{" "}
               {trail?.visits.length === 1 ? "visit" : "visits"} on record
             </p>
@@ -131,7 +131,7 @@ export default async function AdminLaptopsPage({
           <section aria-labelledby="laptop-record" className="mt-8">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+                <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
                   {trail?.laptop ? "On the register" : "Loose serial"}
                 </p>
                 <h2
@@ -183,7 +183,7 @@ export default async function AdminLaptopsPage({
                 <div className="min-w-0">
                   <dl className="divide-y divide-rule border-y border-rule md:border-t-0 md:pt-0">
                     <div className="grid gap-1 py-2.5 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-4">
-                      <dt className="font-mono text-[9px] uppercase tracking-[0.12em] text-ink-muted">
+                      <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
                         Model
                       </dt>
                       <dd className="font-display text-[1.35rem] leading-tight text-ink">
@@ -191,7 +191,7 @@ export default async function AdminLaptopsPage({
                       </dd>
                     </div>
                     <div className="grid gap-1 py-2.5 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-4">
-                      <dt className="font-mono text-[9px] uppercase tracking-[0.12em] text-ink-muted">
+                      <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
                         Serial
                       </dt>
                       <dd className="break-all font-mono text-[11px] uppercase tracking-[0.06em] text-ink">
@@ -199,22 +199,22 @@ export default async function AdminLaptopsPage({
                       </dd>
                     </div>
                     <div className="grid gap-1 py-2.5 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-4">
-                      <dt className="font-mono text-[9px] uppercase tracking-[0.12em] text-ink-muted">
+                      <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
                         Owner
                       </dt>
                       <dd className="text-sm leading-6 text-ink">
                         {trail.laptop.ownerName}
-                        <span className="mt-0.5 block font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
+                        <span className="mt-0.5 block font-mono text-[11px] uppercase tracking-[0.08em] text-ink-muted">
                           {trail.laptop.ownerAdmissionNumber ?? "No admission"}{" "}
                           · {trail.laptop.ownerEmail}
                         </span>
                       </dd>
                     </div>
                     <div className="grid gap-1 py-2.5 sm:grid-cols-[8rem_minmax(0,1fr)] sm:gap-4">
-                      <dt className="font-mono text-[9px] uppercase tracking-[0.12em] text-ink-muted">
+                      <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
                         Class
                       </dt>
-                      <dd className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink">
+                      <dd className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink">
                         {trail.laptop.kind === "library"
                           ? "Library laptop"
                           : "Personal laptop"}
@@ -239,7 +239,7 @@ export default async function AdminLaptopsPage({
               >
                 Visit trail
               </h2>
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
                 Newest first
               </p>
             </div>
@@ -254,7 +254,7 @@ export default async function AdminLaptopsPage({
                     <p className="font-mono text-[11px] leading-5 tracking-[0.04em] text-ink">
                       {formatClock(visit.entryAt)}
                     </p>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                       {formatShortDate(visit.entryAt)}
                     </p>
                   </div>
@@ -263,13 +263,13 @@ export default async function AdminLaptopsPage({
                     <p className="font-display text-[1.2rem] leading-tight tracking-[-0.01em] text-ink">
                       {visit.visitorName}
                     </p>
-                    <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                       {visit.visitorAdmissionNumber ?? "No admission"}
                     </p>
                   </div>
 
                   <div>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.06em] text-ink-muted">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.06em] text-ink-muted">
                       In{" "}
                       <span className="text-forest">
                         {formatClock(visit.entryAt)}
@@ -277,7 +277,7 @@ export default async function AdminLaptopsPage({
                       {" · "}
                       {visit.entryMethod}
                     </p>
-                    <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.06em] text-ink-muted">
+                    <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.06em] text-ink-muted">
                       Out{" "}
                       {visit.exitAt ? (
                         <>
@@ -291,7 +291,7 @@ export default async function AdminLaptopsPage({
                         <span className="text-forest">Still inside</span>
                       )}
                     </p>
-                    <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+                    <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                       {visit.exitAt
                         ? formatDuration(visit.entryAt, visit.exitAt)
                         : "Open visit"}

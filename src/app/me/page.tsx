@@ -46,7 +46,7 @@ export default async function MePage({
 
   return (
     <div className="mx-auto w-full max-w-[1180px] flex-1 px-5 pb-14 pt-8 sm:px-8 sm:pb-20 sm:pt-12">
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
         <p>Your page · {formatDayLabel(now)}</p>
         {admissionNumber ? (
           <p className="stamp max-w-[15rem] truncate normal-case tracking-[0.1em] text-ink-muted">
@@ -81,81 +81,80 @@ export default async function MePage({
 
       <section
         aria-labelledby="library-status"
-        className="grid gap-5 border-b border-rule py-6 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:py-7"
+        className="border-b border-rule py-6 sm:py-7"
       >
-        <div>
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h2
             id="library-status"
-            className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted"
+            className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted"
           >
             Library status
           </h2>
-
-          <div className="mt-3 flex items-start gap-3">
-            <span
-              aria-hidden="true"
-              className={`grid size-11 shrink-0 place-items-center rounded-sm border border-rule ${
-                openVisit
-                  ? "bg-wash text-forest"
-                  : "bg-surface text-ink-muted"
-              }`}
-            >
-              <LaptopIcon
-                size={24}
-                weight={openVisit ? "duotone" : "regular"}
-              />
-            </span>
-
-            <div className="min-w-0">
-              {openVisit ? (
-                <p className="font-display text-[1.7rem] leading-tight tracking-[-0.015em] text-ink">
-                  Signed in at{" "}
-                  <time
-                    dateTime={openVisit.entryAt.toISOString()}
-                    className="tabular-nums"
-                  >
-                    {formatClock(openVisit.entryAt)}
-                  </time>
-                </p>
-              ) : (
-                <p className="font-display text-[1.7rem] leading-tight tracking-[-0.015em] text-ink">
-                  Not in the library
-                </p>
-              )}
-
-              <p className="mt-1.5 flex items-center gap-1.5 text-sm leading-6 text-ink-muted">
-                <QrCode aria-hidden="true" size={15} weight="regular" />
-                Scan the code at the door to enter.
-              </p>
-
-              {!admissionNumber ? (
-                <p className="mt-1.5 text-sm leading-6 text-vermilion">
-                  <a
-                    href="#admission"
-                    className="inline-flex min-h-11 items-center underline decoration-1 underline-offset-4"
-                  >
-                    Add your admission number before your first scan.
-                  </a>
-                </p>
-              ) : null}
-            </div>
-          </div>
+          <p
+            className={`stamp ${
+              openVisit ? "text-forest" : "text-ink-muted"
+            }`}
+          >
+            {openVisit ? "In library" : "Away"}
+          </p>
         </div>
 
-        <p
-          className={`stamp w-fit ${
-            openVisit ? "text-forest" : "text-ink-muted"
-          }`}
-        >
-          {openVisit ? "In library" : "Away"}
-        </p>
+        <div className="mt-4 flex items-start gap-3 sm:mt-5">
+          <span
+            aria-hidden="true"
+            className={`grid size-11 shrink-0 place-items-center rounded-sm border border-rule ${
+              openVisit
+                ? "bg-wash text-forest"
+                : "bg-surface text-ink-muted"
+            }`}
+          >
+            <LaptopIcon
+              size={24}
+              weight={openVisit ? "duotone" : "regular"}
+            />
+          </span>
+
+          <div className="min-w-0">
+            {openVisit ? (
+              <p className="font-display text-[1.7rem] leading-tight tracking-[-0.015em] text-ink">
+                Signed in at{" "}
+                <time
+                  dateTime={openVisit.entryAt.toISOString()}
+                  className="tabular-nums"
+                >
+                  {formatClock(openVisit.entryAt)}
+                </time>
+              </p>
+            ) : (
+              <p className="font-display text-[1.7rem] leading-tight tracking-[-0.015em] text-ink">
+                Not in the library
+              </p>
+            )}
+
+            <p className="mt-1.5 flex items-center gap-1.5 text-sm leading-6 text-ink-muted">
+              <QrCode aria-hidden="true" size={15} weight="regular" />
+              Scan the code at the door to enter.
+            </p>
+
+            {!admissionNumber ? (
+              <p className="mt-1.5 text-sm leading-6 text-vermilion">
+                <a
+                  href="#admission"
+                  className="inline-flex min-h-11 items-center underline decoration-1 underline-offset-4"
+                >
+                  Add your admission number before your first scan.
+                </a>
+              </p>
+            ) : null}
+          </div>
+        </div>
       </section>
 
       <div className="grid gap-10 pt-8 lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-12 lg:pt-10">
         <section aria-labelledby="my-laptops">
           <div className="flex flex-wrap items-end justify-between gap-x-5 gap-y-4">
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
                 On the register
               </p>
               <h2
@@ -171,7 +170,7 @@ export default async function MePage({
             </Link>
           </div>
 
-          <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+          <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
             {laptopLabel}
           </p>
 
@@ -199,7 +198,7 @@ export default async function MePage({
             </div>
           )}
 
-          <p className="mt-4 flex max-w-[52ch] items-start gap-2 font-mono text-[10px] leading-5 text-ink-muted">
+          <p className="mt-4 flex max-w-[52ch] items-start gap-2 font-mono text-[11px] leading-5 text-ink-muted">
             <LockKey
               aria-hidden="true"
               size={14}
@@ -215,7 +214,7 @@ export default async function MePage({
           aria-labelledby="record-title"
           className="scroll-mt-24 border-t border-rule pt-7 lg:sticky lg:top-28 lg:self-start lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
             Before the door
           </p>
           <h2
@@ -237,7 +236,7 @@ export default async function MePage({
 
           <dl className="mt-8 divide-y divide-rule border-y border-rule">
             <div className="flex items-baseline justify-between gap-4 py-2.5">
-              <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+              <dt className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
                 Role
               </dt>
               <dd className="text-right text-sm font-medium text-ink">
@@ -245,7 +244,7 @@ export default async function MePage({
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-4 py-2.5">
-              <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+              <dt className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
                 Laptops
               </dt>
               <dd className="text-right text-sm font-medium text-ink">
@@ -253,10 +252,10 @@ export default async function MePage({
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-4 py-2.5">
-              <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+              <dt className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
                 Email
               </dt>
-              <dd className="max-w-[12rem] break-all text-right font-mono text-[10px] leading-4 text-ink-muted">
+              <dd className="max-w-[12rem] break-all text-right font-mono text-[11px] leading-4 text-ink-muted">
                 {email}
               </dd>
             </div>

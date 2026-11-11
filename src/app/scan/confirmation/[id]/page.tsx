@@ -121,7 +121,7 @@ export default async function ConfirmationPage({
             </div>
             <div className="col-span-2 sm:col-span-1 sm:text-right">
               <dt className="pass-label">Record</dt>
-              <dd className="mt-1 font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--pass-muted)]">
+              <dd className="mt-1 font-mono text-[11px] uppercase tracking-[0.1em] text-[var(--pass-muted)]">
                 {visit.exitMethod === "auto"
                   ? "Automatic close"
                   : visit.entryMethod === "manual" ||

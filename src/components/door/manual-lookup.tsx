@@ -330,11 +330,11 @@ export function ManualLookup({ direction, timeZone }: ManualLookupProps) {
                               <span className="break-words text-[0.9375rem] font-semibold leading-5 text-[var(--door-ink)]">
                                 {person.name}
                               </span>
-                              <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-[var(--door-muted)]">
+                              <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-[var(--door-muted)]">
                                 {person.admissionNumber ?? "No admission"}
                               </span>
                             </span>
-                            <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] leading-4 text-[var(--door-muted)]">
+                            <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[11px] leading-4 text-[var(--door-muted)]">
                               <span>
                                 {person.openVisit
                                   ? `Inside since ${person.openVisit.entryTime}`
@@ -376,7 +376,7 @@ export function ManualLookup({ direction, timeZone }: ManualLookupProps) {
                 <button
                   type="button"
                   onClick={() => setSelected(null)}
-                  className="door-link text-[10px] uppercase tracking-[0.12em]"
+                  className="door-link text-[11px] uppercase tracking-[0.12em]"
                 >
                   Clear
                 </button>
@@ -388,7 +388,7 @@ export function ManualLookup({ direction, timeZone }: ManualLookupProps) {
                 <p className="break-words font-display text-[1.7rem] leading-tight tracking-[-0.015em] text-[var(--door-ink)]">
                   {selected.name}
                 </p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--door-muted)]">
+                <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--door-muted)]">
                   Admission {selected.admissionNumber ?? "not recorded"}
                 </p>
                 <p className="door-muted mt-3 flex items-center gap-1.5 text-sm leading-6">

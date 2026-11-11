@@ -25,7 +25,7 @@ export function AdminPagination({
       aria-label={`${unit} pages`}
       className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-rule pt-4"
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+      <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
         {total} {unit} · page {page} of {pageCount}
       </p>
 

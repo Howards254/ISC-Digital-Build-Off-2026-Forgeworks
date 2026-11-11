@@ -246,7 +246,7 @@ export function DoorScreen({
                   />
                 ) : (
                   <div className="grid aspect-square w-full place-items-center bg-[#f4efe4] text-[#5c5f58]">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.14em]">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.14em]">
                       Issuing door code…
                     </p>
                   </div>
@@ -365,7 +365,7 @@ export function DoorScreen({
                       <span className="block truncate text-sm font-medium text-[var(--door-ink)]">
                         {scan.name}
                       </span>
-                      <span className="mt-0.5 block truncate font-mono text-[10px] leading-4 text-[var(--door-muted)]">
+                      <span className="mt-0.5 block truncate font-mono text-[11px] leading-4 text-[var(--door-muted)]">
                         {scan.admissionNumber ? `${scan.admissionNumber} · ` : ""}
                         {scan.deviceModel ??
                           (scan.looseSerial

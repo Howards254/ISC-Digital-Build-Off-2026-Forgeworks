@@ -216,7 +216,7 @@ NEXT_PUBLIC_DEMO_MODE=true npm run seed
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and sign in with a Google account that matches `SCHOOL_DOMAIN`.
+Open [http://localhost:3000](http://localhost:3000) and sign in with a Google account that matches `SCHOOL_DOMAIN`, or with an address listed in `ADMIN_EMAILS`.
 
 ### 1. Install dependencies
 
@@ -268,9 +268,9 @@ OAuth consent screen notes:
 - For a Google Workspace school, an **Internal** app is simplest.
 - For an External app in **Testing**, only accounts added under **Test users** can sign in.
 - Publish the app before real users need access, or keep the test-user list current.
-- If you use a personal Gmail account for a local demo, set `SCHOOL_DOMAIN="gmail.com"` and put your address in `ADMIN_EMAILS`. This admits **any** Gmail account, so use it only for local demos.
+- If you use personal Gmail accounts for a local demo, `SCHOOL_DOMAIN="gmail.com"` admits **any** Gmail account, so use it only for a private test deployment. If only the librarian needs a Gmail address, keep the real school domain and add that exact address to `ADMIN_EMAILS` instead.
 
-The app sends Google's `hd` parameter as an account-chooser hint when `SCHOOL_DOMAIN` is not `gmail.com` or `googlemail.com`. It is omitted for those two domains because Google treats `hd` as a Workspace constraint. The server-side `signIn` callback is the actual gate; `hd` is not trusted for authorization.
+The app sends Google's `hd` parameter as an account-chooser hint when `SCHOOL_DOMAIN` is not `gmail.com` or `googlemail.com` and every address in `ADMIN_EMAILS` belongs to the school domain. If an allowlisted admin is on another domain, `hd` is omitted so that account can still reach the chooser. The server-side `signIn` callback is the actual gate; `hd` is not trusted for authorization.
 
 ### 5. Create the Blob store
 
@@ -288,8 +288,8 @@ ADMIN_EMAILS="librarian@school.edu,head.librarian@school.edu"
 SCHOOL_TIME_ZONE="Africa/Nairobi"
 ```
 
-- `SCHOOL_DOMAIN` is stored without the leading `@`.
-- `ADMIN_EMAILS` is comma-separated. These accounts are always admins.
+- `SCHOOL_DOMAIN` is stored without the leading `@`. It admits ordinary members.
+- `ADMIN_EMAILS` is comma-separated. These accounts are always admins and may be on another Google domain, such as a personal Gmail address.
 - `SCHOOL_TIME_ZONE` is an IANA timezone and controls greetings, dates, door clocks, history day boundaries, and grant end dates. It defaults to `Europe/London` when unset; this deployment uses `Africa/Nairobi`.
 
 ### 7. Set the door and public URL values
@@ -336,7 +336,7 @@ The seed is guarded and idempotent. See [Demo mode and seed data](#demo-mode-and
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Sign in with a Google account that ends in `@$SCHOOL_DOMAIN`. If your address is in `ADMIN_EMAILS`, the account menu will include the librarian desk.
+Open [http://localhost:3000](http://localhost:3000). Sign in with a Google account that ends in `@$SCHOOL_DOMAIN`, or with an address listed in `ADMIN_EMAILS`. If your address is in `ADMIN_EMAILS`, the account menu will include the librarian desk.
 
 ---
 
@@ -350,8 +350,8 @@ Open [http://localhost:3000](http://localhost:3000). Sign in with a Google accou
 | `AUTH_URL` | In production | Canonical app origin for Auth.js. Locally, `http://localhost:3000`. |
 | `AUTH_GOOGLE_ID` | Yes | Google OAuth client id. |
 | `AUTH_GOOGLE_SECRET` | Yes | Google OAuth client secret. |
-| `SCHOOL_DOMAIN` | Yes | The only email domain admitted at sign-in, without the leading `@`. |
-| `ADMIN_EMAILS` | No | Comma-separated accounts that are always admins, with or without a grant. |
+| `SCHOOL_DOMAIN` | Yes | The email domain admitted to ordinary member sign-in, without the leading `@`. |
+| `ADMIN_EMAILS` | No | Comma-separated accounts that are always admins, with or without a grant. They may be outside `SCHOOL_DOMAIN`. |
 | `SCHOOL_TIME_ZONE` | No | IANA timezone for greetings, dates, door clocks, history boundaries, and grant end dates. Defaults to `Europe/London`. |
 | `BLOB_READ_WRITE_TOKEN` | Yes for photos | Vercel Blob read/write token. Without it, uploads return a configuration error. |
 | `BLOB_STORE_ID` | No | Explicit Blob store id, used when the token does not expose one in a form the app can parse. |
@@ -395,9 +395,9 @@ NEXT_PUBLIC_DEMO_MODE="true"
 Only Google accounts that satisfy both conditions are admitted:
 
 1. Google reports `email_verified: true`.
-2. The email ends in `@$SCHOOL_DOMAIN`.
+2. The email ends in `@$SCHOOL_DOMAIN`, **or** the address is listed in `ADMIN_EMAILS`.
 
-The check runs in the Auth.js `signIn` callback on the server. The client cannot bypass it by calling an API directly.
+The check runs in the Auth.js `signIn` callback on the server. The client cannot bypass it by calling an API directly. The admin exception is deliberately narrow: a personal Gmail account is admitted only when its exact address is in `ADMIN_EMAILS`.
 
 Rejected accounts are sent to `/auth/error`, which explains the school-domain rule without exposing internal details. A provider other than Google is rejected even if it is added later.
 
@@ -431,7 +431,7 @@ Every member API starts with `getApiUser()`. User id and role come from the sess
 
 ### Email domain hints
 
-For a Workspace domain, the app passes Google's `hd` parameter to make the account chooser prefer the school domain. For `gmail.com` and `googlemail.com`, it omits `hd` because Google treats it as a Workspace constraint. The server-side domain gate remains authoritative in both cases.
+For a Workspace domain, the app passes Google's `hd` parameter to make the account chooser prefer the school domain. It omits `hd` for `gmail.com` and `googlemail.com`, and whenever an allowlisted admin is outside the school domain; otherwise that admin could be blocked before the app's own gate runs. The server-side gate remains authoritative in every case.
 
 ---
 
@@ -442,7 +442,7 @@ For a Workspace domain, the app passes Google's `hd` parameter to make the accou
 1. The member opens `/` and chooses **Continue with Google**.
 2. Auth.js redirects to Google with a PKCE challenge and the school domain hint where applicable.
 3. Google returns to `/api/auth/callback/google`.
-4. The `signIn` callback verifies the Google account and school domain.
+4. The `signIn` callback verifies the Google account and either the school domain or the admin allowlist.
 5. The `jwt` callback upserts the `users` row and resolves the role.
 6. The member is sent to `/me` or to the safe `next` path they came from.
 
@@ -1104,7 +1104,7 @@ Server errors are logged with `console.error` and appear in the Vercel function 
 | --- | --- | --- |
 | `redirect_uri_mismatch` from Google | The callback URL is not registered exactly. | Add `http://localhost:3000/api/auth/callback/google` and the production equivalent. Match scheme, host, port, and path. |
 | “Access blocked” or “app is being tested” | OAuth app is External and in Testing, and the account is not a test user. | Add the address under **OAuth consent screen → Test users**, or publish the app. |
-| Sign-in succeeds at Google but Vulcan rejects the account | Email domain does not match `SCHOOL_DOMAIN`. | Use a school account or change `SCHOOL_DOMAIN` for the demo. Restart the dev server after changing env values. |
+| Sign-in succeeds at Google but Vulcan rejects the account | The email is neither at `SCHOOL_DOMAIN` nor in `ADMIN_EMAILS`. | Use a school account, or add the address to `ADMIN_EMAILS` if it should have the librarian desk. Restart the dev server after changing env values. |
 | `DATABASE_URL is not set` | `.env.local` missing or the server started before it existed. | Add the pooled URL and restart `npm run dev`. |
 | `relation "users" does not exist` | Migrations have not run against this database. | `npm run db:migrate` with the correct `DATABASE_URL`/`DATABASE_URL_UNPOOLED`. |
 | `password authentication failed` | Wrong password, role, or database in the connection string. | Re-copy the Neon connection string; check for stale credentials. |
@@ -1130,7 +1130,7 @@ Server errors are logged with `console.error` and appear in the Vercel function 
 ## Security notes
 
 - **Server-side authorization.** Every guarded page and API re-checks the session and role on the server. The client is never trusted for identity or role.
-- **Domain gate.** Google sign-in is restricted to verified emails at `SCHOOL_DOMAIN`. The Google `hd` hint is not an authorization control.
+- **Domain gate.** Google sign-in is restricted to verified school-domain emails, with a narrow exception for explicitly allowlisted `ADMIN_EMAILS`. The Google `hd` hint is not an authorization control.
 - **Fresh admin checks.** The librarian area re-reads `role_grants` and `ADMIN_EMAILS` on every request.
 - **Safe redirects.** Post-auth return paths are limited to same-origin relative paths.
 - **Secret isolation.** `AUTH_SECRET`, `TOKEN_SECRET`, `CRON_SECRET`, the Google client secret, the Neon password, and the Blob token are server-side secrets. Never expose them through `NEXT_PUBLIC_*`.

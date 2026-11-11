@@ -119,7 +119,7 @@ function CompactAudit({ rows }: { rows: AdminAuditEntry[] }) {
                 <p className="font-mono text-[11px] leading-5 tracking-[0.04em] text-ink">
                   {formatClockWithSeconds(entry.createdAt)}
                 </p>
-                <p className="font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+                <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                   {formatShortDate(entry.createdAt)}
                 </p>
               </div>
@@ -135,7 +135,7 @@ function CompactAudit({ rows }: { rows: AdminAuditEntry[] }) {
             <p className="mt-2.5 font-display text-[1.25rem] leading-tight tracking-[-0.01em] text-ink">
               {entry.actorName ?? "Unknown actor"}
             </p>
-            <p className="mt-0.5 break-all font-mono text-[9px] leading-4 text-ink-muted">
+            <p className="mt-0.5 break-all font-mono text-[10px] leading-4 text-ink-muted">
               {entry.actorEmail ?? "No email on record"}
             </p>
 
@@ -151,7 +151,7 @@ function CompactAudit({ rows }: { rows: AdminAuditEntry[] }) {
                 ))}
               </ul>
             ) : (
-              <p className="mt-2 break-all font-mono text-[9px] leading-4 text-ink-muted">
+              <p className="mt-2 break-all font-mono text-[10px] leading-4 text-ink-muted">
                 {entry.entity} · {entry.entityId}
               </p>
             )}
@@ -162,7 +162,7 @@ function CompactAudit({ rows }: { rows: AdminAuditEntry[] }) {
               </div>
             ) : null}
 
-            <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.06em] text-ink-muted">
+            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.06em] text-ink-muted">
               {entry.action}
             </p>
           </li>
@@ -187,7 +187,7 @@ export default async function AdminAuditPage({
   return (
     <div>
       <header className="border-b border-rule pb-7 sm:pb-9">
-        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
           <p>Audit log</p>
           <p>Read-only</p>
         </div>
@@ -210,10 +210,10 @@ export default async function AdminAuditPage({
       </header>
 
       <div className="mt-6 flex flex-wrap items-baseline justify-between gap-2">
-        <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
           {result.total} {result.total === 1 ? "entry" : "entries"}
         </p>
-        <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+        <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
           Newest first
         </p>
       </div>
@@ -248,7 +248,7 @@ export default async function AdminAuditPage({
                   <th
                     key={label}
                     scope="col"
-                    className="px-3 py-2.5 font-mono text-[9px] font-medium uppercase tracking-[0.14em] text-ink-muted first:pl-1 last:pr-1"
+                    className="px-3 py-2.5 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-ink-muted first:pl-1 last:pr-1"
                   >
                     {label}
                   </th>
@@ -266,7 +266,7 @@ export default async function AdminAuditPage({
                       <p className="font-mono text-[11px] leading-5 tracking-[0.04em] text-ink">
                         {formatClockWithSeconds(entry.createdAt)}
                       </p>
-                      <p className="font-mono text-[9px] uppercase tracking-[0.08em] text-ink-muted">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                         {formatShortDate(entry.createdAt)}
                       </p>
                     </td>
@@ -275,7 +275,7 @@ export default async function AdminAuditPage({
                       <p className="text-sm leading-5 text-ink">
                         {entry.actorName ?? "Unknown actor"}
                       </p>
-                      <p className="mt-0.5 break-all font-mono text-[9px] leading-4 text-ink-muted">
+                      <p className="mt-0.5 break-all font-mono text-[10px] leading-4 text-ink-muted">
                         {entry.actorEmail ?? "No email on record"}
                       </p>
                     </td>
@@ -288,7 +288,7 @@ export default async function AdminAuditPage({
                       >
                         {actionLabel(entry.action)}
                       </span>
-                      <p className="mt-1.5 font-mono text-[9px] uppercase tracking-[0.06em] text-ink-muted">
+                      <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.06em] text-ink-muted">
                         {entry.action}
                       </p>
                     </td>
@@ -306,7 +306,7 @@ export default async function AdminAuditPage({
                           ))}
                         </ul>
                       ) : (
-                        <p className="break-all font-mono text-[9px] leading-4 text-ink-muted">
+                        <p className="break-all font-mono text-[10px] leading-4 text-ink-muted">
                           {entry.entity} · {entry.entityId}
                         </p>
                       )}

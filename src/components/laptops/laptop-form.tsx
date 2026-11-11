@@ -257,7 +257,7 @@ export function LaptopForm({ mode, initial }: LaptopFormProps) {
                 *
               </span>
             </label>
-            <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-muted">
+            <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-muted">
               Required
             </span>
           </div>
@@ -308,7 +308,7 @@ export function LaptopForm({ mode, initial }: LaptopFormProps) {
                 *
               </span>
             </label>
-            <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-muted">
+            <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-muted">
               Unique
             </span>
           </div>

@@ -122,7 +122,7 @@ export function AdmissionNumberForm({
       ) : (
         <p
           id="admission-hint"
-          className="mt-2 font-mono text-[10px] leading-5 text-ink-muted"
+          className="mt-2 font-mono text-[11px] leading-5 text-ink-muted"
         >
           Stored in capitals. Required before your first scan.
           {returnTo ? " Saving returns you to the door code." : ""}

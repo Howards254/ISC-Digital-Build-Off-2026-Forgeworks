@@ -17,7 +17,7 @@ export function FlagTags({ flags, emptyLabel = "No flags" }: FlagTagsProps) {
 
   if (ordered.length === 0) {
     return emptyLabel ? (
-      <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-ink-muted">
+      <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-ink-muted">
         {emptyLabel}
       </span>
     ) : null;

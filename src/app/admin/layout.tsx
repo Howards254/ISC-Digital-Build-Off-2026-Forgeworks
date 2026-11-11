@@ -23,14 +23,14 @@ export default async function AdminLayout({
       <aside className="border-b border-rule bg-surface lg:sticky lg:top-[68px] lg:flex lg:h-[calc(100dvh-68px)] lg:flex-col lg:border-b-0 lg:border-r">
         <div className="flex items-baseline justify-between gap-4 px-5 pb-4 pt-6 lg:block lg:px-5 lg:pb-6 lg:pt-8">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted">
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-muted">
               Librarian desk
             </p>
             <p className="mt-1 font-display text-[1.85rem] leading-none tracking-[-0.02em] text-ink">
               The ledger
             </p>
           </div>
-          <p className="max-w-[12rem] truncate font-mono text-[10px] text-ink-muted lg:mt-3">
+          <p className="max-w-[12rem] truncate font-mono text-[11px] text-ink-muted lg:mt-3">
             {session.user.email}
           </p>
         </div>
@@ -43,7 +43,7 @@ export default async function AdminLayout({
           tabIndex={0}
           className="hidden min-h-0 flex-1 overflow-y-auto border-t border-rule px-5 py-6 lg:block"
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+          <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
             Flag key
           </p>
           <div className="mt-4">
@@ -52,7 +52,7 @@ export default async function AdminLayout({
         </div>
 
         <details className="border-t border-rule px-5 py-3 lg:hidden">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
             Flag key
             <span aria-hidden="true" className="font-sans text-base leading-none">
               +

@@ -33,7 +33,7 @@ export default function ExpiredCodePage() {
           </div>
         </div>
 
-        <ol className="mt-5 space-y-2 border-t border-rule pt-4 font-mono text-[10px] uppercase leading-5 tracking-[0.1em] text-ink-muted">
+        <ol className="mt-5 space-y-2 border-t border-rule pt-4 font-mono text-[11px] uppercase leading-5 tracking-[0.1em] text-ink-muted">
           <li>
             <span className="text-brass">01</span> Look at the door screen
           </li>

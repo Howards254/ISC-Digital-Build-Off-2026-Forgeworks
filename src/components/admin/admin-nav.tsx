@@ -11,11 +11,31 @@ import {
 } from "@phosphor-icons/react";
 
 const NAV_ITEMS = [
-  { href: "/admin", label: "Inside", icon: UsersThree },
-  { href: "/admin/history", label: "History", icon: ClockCounterClockwise },
-  { href: "/admin/laptops", label: "Laptops", icon: Laptop },
-  { href: "/admin/gatekeepers", label: "Gatekeepers", icon: IdentificationBadge },
-  { href: "/admin/audit", label: "Audit", icon: Scroll },
+  { href: "/admin", label: "Inside", shortLabel: "Inside", icon: UsersThree },
+  {
+    href: "/admin/history",
+    label: "History",
+    shortLabel: "History",
+    icon: ClockCounterClockwise,
+  },
+  {
+    href: "/admin/laptops",
+    label: "Laptops",
+    shortLabel: "Laptops",
+    icon: Laptop,
+  },
+  {
+    href: "/admin/gatekeepers",
+    label: "Gatekeepers",
+    shortLabel: "Grants",
+    icon: IdentificationBadge,
+  },
+  {
+    href: "/admin/audit",
+    label: "Audit",
+    shortLabel: "Audit",
+    icon: Scroll,
+  },
 ] as const;
 
 export function AdminNav() {
@@ -24,7 +44,7 @@ export function AdminNav() {
   return (
     <nav
       aria-label="Librarian sections"
-      className="flex gap-1 overflow-x-auto border-b border-rule px-3 pb-3 lg:flex-col lg:overflow-visible lg:border-b-0 lg:px-2"
+      className="grid grid-cols-5 border-b border-rule px-2 pb-2 lg:flex lg:flex-col lg:gap-1 lg:border-b-0 lg:px-2 lg:pb-3"
     >
       {NAV_ITEMS.map((item) => {
         const active =
@@ -38,18 +58,26 @@ export function AdminNav() {
             key={item.href}
             href={item.href}
             aria-current={active ? "page" : undefined}
-            className={`flex min-h-11 shrink-0 items-center gap-3 rounded-sm px-3 text-sm font-medium transition-colors duration-150 lg:rounded-r-sm lg:rounded-l-none lg:border-l-2 ${
+            aria-label={item.label}
+            className={`relative flex min-h-14 flex-col items-center justify-center gap-1 rounded-sm px-1 py-2 text-[0.6875rem] font-medium leading-none transition-colors duration-150 lg:min-h-11 lg:flex-row lg:justify-start lg:gap-3 lg:rounded-l-none lg:rounded-r-sm lg:border-l-2 lg:px-3 lg:text-sm lg:leading-normal ${
               active
-                ? "border-brass bg-paper text-forest lg:bg-wash"
-                : "border-transparent text-ink-muted hover:bg-wash hover:text-ink"
+                ? "bg-paper text-forest lg:border-brass lg:bg-wash"
+                : "text-ink-muted hover:bg-wash hover:text-ink lg:border-transparent"
             }`}
           >
+            {active ? (
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-3 top-0 h-0.5 bg-brass lg:hidden"
+              />
+            ) : null}
             <Icon
               aria-hidden="true"
               size={18}
               weight={active ? "duotone" : "regular"}
             />
-            {item.label}
+            <span className="lg:hidden">{item.shortLabel}</span>
+            <span className="hidden lg:inline">{item.label}</span>
           </Link>
         );
       })}

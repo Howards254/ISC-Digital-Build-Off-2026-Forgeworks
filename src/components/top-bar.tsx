@@ -29,7 +29,7 @@ export async function TopBar() {
           <span className="font-display text-[1.6rem] leading-none tracking-[-0.02em] text-ink">
             Vulcan
           </span>
-          <span className="hidden border-l border-rule pl-3 font-mono text-[10px] uppercase leading-tight tracking-[0.14em] text-ink-muted md:block">
+          <span className="hidden border-l border-rule pl-3 font-mono text-[11px] uppercase leading-tight tracking-[0.14em] text-ink-muted md:block">
             Library
             <br />
             ledger

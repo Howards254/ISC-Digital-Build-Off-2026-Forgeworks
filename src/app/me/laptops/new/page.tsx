@@ -25,7 +25,7 @@ export default async function NewLaptopPage() {
           Your page
         </Link>
 
-        <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+        <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
           My laptops / New entry
         </p>
         <h1 className="mt-2 font-display text-[clamp(2.7rem,6vw,4.2rem)] leading-[0.95] tracking-[-0.03em] text-ink">

@@ -99,7 +99,7 @@ export function DevicePicker({
                 <span className="block break-words font-display text-[1.2rem] leading-tight tracking-[-0.01em] text-ink">
                   {laptop.model}
                 </span>
-                <span className="mt-1 block break-all font-mono text-[10px] uppercase leading-4 tracking-[0.06em] text-ink-muted">
+                <span className="mt-1 block break-all font-mono text-[11px] uppercase leading-4 tracking-[0.06em] text-ink-muted">
                   {laptop.serial}
                 </span>
               </span>
@@ -152,7 +152,7 @@ export function DevicePicker({
                 placeholder="SERIAL"
                 className="field-input mt-2 font-mono uppercase"
               />
-              <p className="mt-2 font-mono text-[10px] leading-5 text-ink-muted">
+              <p className="mt-2 font-mono text-[11px] leading-5 text-ink-muted">
                 The gatekeeper can match a registered serial to its owner.
               </p>
             </div>

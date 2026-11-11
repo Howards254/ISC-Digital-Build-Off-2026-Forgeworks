@@ -58,8 +58,20 @@ export async function getEffectiveRole(email: string): Promise<UserRole> {
 }
 
 const schoolDomain = getSchoolDomain();
+const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+  .split(",")
+  .map((value) => normalizeEmail(value))
+  .filter(Boolean);
+// Google's `hd` parameter confines the account chooser to a Workspace domain.
+// Omit it when an allowlisted admin lives outside the school so that account
+// can still reach the chooser. The server-side signIn gate remains authoritative.
+const hasExternalAdmin = adminEmails.some(
+  (email) => !schoolDomain || !email.endsWith(`@${schoolDomain}`),
+);
 const hostedDomain =
-  schoolDomain && !["gmail.com", "googlemail.com"].includes(schoolDomain)
+  schoolDomain &&
+  !["gmail.com", "googlemail.com"].includes(schoolDomain) &&
+  !hasExternalAdmin
     ? schoolDomain
     : null;
 
@@ -98,7 +110,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return false;
       }
 
-      return isSchoolEmail(googleProfile.email);
+      // Explicitly allowlisted admins may live outside the school domain.
+      // Everyone else still passes through the domain gate.
+      return (
+        isSchoolEmail(googleProfile.email) ||
+        isAdminEmail(googleProfile.email)
+      );
     },
 
     async jwt({ token, user }) {

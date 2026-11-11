@@ -57,7 +57,7 @@ function SignOutForm({
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-sm border border-rule bg-surface px-3 py-2 font-mono text-[10px] uppercase tracking-[0.1em] text-ink-muted transition-colors duration-150 hover:border-vermilion hover:text-vermilion disabled:cursor-wait disabled:opacity-60 md:w-auto"
+        className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-sm border border-rule bg-surface px-3 py-2 font-mono text-[11px] uppercase tracking-[0.1em] text-ink-muted transition-colors duration-150 hover:border-vermilion hover:text-vermilion disabled:cursor-wait disabled:opacity-60 md:w-auto"
       >
         {pending ? (
           <SpinnerGap aria-hidden="true" size={13} className="animate-spin" />
@@ -156,7 +156,7 @@ export function InsideLedger({
   return (
     <>
       <header className="border-b border-rule pb-8 sm:pb-10">
-        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+        <div className="flex flex-wrap items-center justify-between gap-2 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
           <p>Who&apos;s inside</p>
           <p>{dayLabel}</p>
         </div>
@@ -182,7 +182,7 @@ export function InsideLedger({
           </h2>
           <p
             aria-live="polite"
-            className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted"
+            className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted"
           >
             <span
               aria-hidden="true"
@@ -215,7 +215,7 @@ export function InsideLedger({
           <ol className="mt-5 border-y border-rule">
             <li
               aria-hidden="true"
-              className="hidden border-b border-rule px-1 py-2 font-mono text-[9px] uppercase tracking-[0.14em] text-ink-muted md:grid md:grid-cols-[5rem_minmax(0,1.3fr)_minmax(0,1.5fr)_minmax(0,1fr)_6.5rem] md:gap-4"
+              className="hidden border-b border-rule px-1 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-ink-muted md:grid md:grid-cols-[5rem_minmax(0,1.3fr)_minmax(0,1.5fr)_minmax(0,1fr)_6.5rem] md:gap-4"
             >
               <span>Time in</span>
               <span>Name</span>
@@ -243,7 +243,7 @@ export function InsideLedger({
                     <p className="font-display text-[1.3rem] leading-tight tracking-[-0.01em] text-ink">
                       {visit.name}
                     </p>
-                    <p className="mt-0.5 break-all font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
+                    <p className="mt-0.5 break-all font-mono text-[11px] uppercase tracking-[0.08em] text-ink-muted">
                       {visit.admissionNumber ?? "No admission number"}
                     </p>
                   </div>
@@ -254,14 +254,14 @@ export function InsideLedger({
                         <p className="text-sm font-medium leading-5 text-ink">
                           {visit.deviceModel ?? "Laptop"}
                         </p>
-                        <p className="mt-0.5 break-all font-mono text-[10px] uppercase tracking-[0.06em] text-ink-muted">
+                        <p className="mt-0.5 break-all font-mono text-[11px] uppercase tracking-[0.06em] text-ink-muted">
                           {visit.deviceSerial
                             ? visit.deviceSerial
                             : `Loose · ${visit.looseSerial}`}
                         </p>
                       </>
                     ) : (
-                      <p className="font-mono text-[10px] uppercase tracking-[0.08em] text-ink-muted">
+                      <p className="font-mono text-[11px] uppercase tracking-[0.08em] text-ink-muted">
                         No device
                       </p>
                     )}

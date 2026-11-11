@@ -84,7 +84,7 @@ export default async function ScanPage({
           <input type="hidden" name="returnTo" value={scanPath} />
           <SchoolSignInButton label="Sign in and continue" />
         </form>
-        <p className="mt-3 font-mono text-[10px] leading-5 text-ink-muted">
+        <p className="mt-3 font-mono text-[11px] leading-5 text-ink-muted">
           Verified school Google accounts only.
         </p>
       </ScanShell>
@@ -131,7 +131,7 @@ export default async function ScanPage({
             <p className="break-words font-display text-[1.45rem] leading-tight tracking-[-0.01em] text-ink">
               {member.name}
             </p>
-            <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+            <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
               Admission {member.admissionNumber}
             </p>
           </div>
@@ -160,7 +160,7 @@ export default async function ScanPage({
           {openVisit ? (
             <dl className="divide-y divide-rule border-y border-rule">
               <div className="flex items-baseline justify-between gap-4 py-2.5">
-                <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+                <dt className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
                   Entered
                 </dt>
                 <dd className="text-right font-mono text-sm tabular-nums text-ink">
@@ -168,7 +168,7 @@ export default async function ScanPage({
                 </dd>
               </div>
               <div className="flex items-baseline justify-between gap-4 py-2.5">
-                <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+                <dt className="font-mono text-[11px] uppercase tracking-[0.12em] text-ink-muted">
                   Laptop
                 </dt>
                 <dd className="max-w-[70%] break-words text-right text-sm text-ink">

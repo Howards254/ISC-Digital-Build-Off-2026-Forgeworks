@@ -110,6 +110,11 @@ export function getGreeting(value: Date) {
 
 export function getFirstName(name: string | null | undefined, email: string) {
   const first = name?.trim().split(/\s+/)[0];
+  const value = first || email.split("@")[0] || "there";
 
-  return first || email.split("@")[0] || "there";
+  // Email local-parts and quietly typed names often arrive all lowercase.
+  // Capitalise only when there is no existing capital to preserve.
+  return value === value.toLowerCase()
+    ? value.charAt(0).toUpperCase() + value.slice(1)
+    : value;
 }
