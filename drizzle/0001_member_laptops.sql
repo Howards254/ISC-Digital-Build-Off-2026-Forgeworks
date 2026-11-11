@@ -1,0 +1,3 @@
+ALTER TABLE "devices" ALTER COLUMN "serial_photo_url" DROP NOT NULL;--> statement-breakpoint
+ALTER TABLE "devices" ADD CONSTRAINT "devices_serial_normalized_check" CHECK ("devices"."serial" = upper(btrim("devices"."serial")) and length("devices"."serial") > 0);--> statement-breakpoint
+ALTER TABLE "users" ADD CONSTRAINT "users_admission_number_normalized_check" CHECK ("users"."admission_number" is null or ("users"."admission_number" = upper(btrim("users"."admission_number")) and length("users"."admission_number") > 0));

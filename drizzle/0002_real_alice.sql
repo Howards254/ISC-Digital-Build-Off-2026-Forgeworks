@@ -1,0 +1,1 @@
+ALTER TYPE "public"."exit_method" ADD VALUE 'auto';
