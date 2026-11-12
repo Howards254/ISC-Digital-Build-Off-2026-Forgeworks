@@ -82,9 +82,17 @@ function parseStoreId(token: string | undefined): string | null {
 /**
  * Uploads are written under `devices/<user id>/` in our own Blob store.
  * Requiring both the expected hostname and the user's path prefix stops a
- * member from attaching an arbitrary external image to their laptop.
+ * member from attaching an arbitrary external image to their laptop. When no
+ * Blob store is configured, the same rule is applied to the relative
+ * `/api/photos/<user id>/<photo id>` fallback URLs.
  */
 export function isOwnPhotoUrl(value: string, userId: string): boolean {
+  const localPrefix = `/api/photos/${userId}/`;
+
+  if (value.startsWith(localPrefix)) {
+    return UUID_PATTERN.test(value.slice(localPrefix.length));
+  }
+
   try {
     const url = new URL(value);
     const expectedHost = getPublicBlobHostname();
@@ -106,3 +114,6 @@ export function isOwnPhotoUrl(value: string, userId: string): boolean {
     return false;
   }
 }
+
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;

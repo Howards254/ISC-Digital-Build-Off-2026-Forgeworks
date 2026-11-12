@@ -128,7 +128,7 @@ The system is built around four rules:
 | Database | Neon Postgres |
 | ORM | Drizzle ORM and Drizzle Kit |
 | Driver | `node-postgres` (`pg`) over a pooled TCP connection |
-| File storage | Vercel Blob (public store) |
+| File storage | Vercel Blob (public store), with Postgres fallback |
 | Icons | Phosphor Icons |
 | Door tokens | `jose` HS256 JWTs |
 | Scheduling | Vercel Cron |
@@ -202,7 +202,7 @@ The session JWT carries a role snapshot. Auth.js refreshes that snapshot from th
 - npm.
 - A Neon account and project, or another Postgres database with SSL.
 - A Google Cloud project with an OAuth 2.0 Web application client.
-- A Vercel Blob store for laptop photos; the rest of the app works without it.
+- A Vercel Blob store for laptop photos; without one, photos are stored in Postgres and served from `/api/photos/`.
 - A Vercel account for deployment and cron; not required for local development.
 
 ### Quick start
@@ -272,13 +272,13 @@ OAuth consent screen notes:
 
 The app sends Google's `hd` parameter as an account-chooser hint when `SCHOOL_DOMAIN` is not `gmail.com` or `googlemail.com` and every address in `ADMIN_EMAILS` belongs to the school domain. If an allowlisted admin is on another domain, `hd` is omitted so that account can still reach the chooser. The server-side `signIn` callback is the actual gate; `hd` is not trusted for authorization.
 
-### 5. Create the Blob store
+### 5. Create the Blob store (optional)
 
-In Vercel → **Storage** → **Blob**, create a **public** store. Laptop photos are displayed by public URL, so a private store will not work.
+Vercel Blob is the preferred photo store. In Vercel → **Storage** → **Blob**, create a **public** store. Laptop photos are displayed by public URL, so a private store will not work.
 
 Copy the read/write token into `BLOB_READ_WRITE_TOKEN`. `BLOB_STORE_ID` is optional; set it only if the token does not expose a store id the app can parse. Uploads are scoped under `devices/<user id>/` and validated against the configured public Blob hostname.
 
-Without a Blob token, the rest of the app runs, but photo uploads return a configuration error.
+Without a token, or when Blob rejects an upload, Vulcan stores the photo in Postgres and serves it from `/api/photos/<user id>/<photo id>`. Laptop registration keeps working; Blob remains the better choice for large collections because it keeps image bytes out of the database.
 
 ### 6. Set school access rules
 
@@ -353,7 +353,7 @@ Open [http://localhost:3000](http://localhost:3000). Sign in with a Google accou
 | `SCHOOL_DOMAIN` | Yes | The email domain admitted to ordinary member sign-in, without the leading `@`. |
 | `ADMIN_EMAILS` | No | Comma-separated accounts that are always admins, with or without a grant. They may be outside `SCHOOL_DOMAIN`. |
 | `SCHOOL_TIME_ZONE` | No | IANA timezone for greetings, dates, door clocks, history boundaries, and grant end dates. Defaults to `Europe/London`. |
-| `BLOB_READ_WRITE_TOKEN` | Yes for photos | Vercel Blob read/write token. Without it, uploads return a configuration error. |
+| `BLOB_READ_WRITE_TOKEN` | No | Vercel Blob read/write token. When absent or rejected, photos are stored in Postgres and served from `/api/photos/`. |
 | `BLOB_STORE_ID` | No | Explicit Blob store id, used when the token does not expose one in a form the app can parse. |
 | `TOKEN_SECRET` | Yes | Signs the short-lived door QR tokens. Generate with `openssl rand -base64 32`. |
 | `NEXT_PUBLIC_APP_URL` | Yes | Public origin written into door QR codes. No trailing slash. |
@@ -461,7 +461,7 @@ A laptop record requires:
 - A laptop photo.
 - An optional serial-sticker photo.
 
-The browser resizes the photo to a maximum width of 1200px and a maximum height of 1600px, then encodes it as JPEG at quality 0.84 before upload. The server accepts JPEG, PNG, or WebP up to 5 MB, detects the format from the file signature rather than the MIME header, and writes to `devices/<user id>/` in the public Blob store.
+The browser resizes the photo to a maximum width of 1200px and a maximum height of 1600px, then encodes it as JPEG at quality 0.84 before upload. The server accepts JPEG, PNG, or WebP up to 5 MB, detects the format from the file signature rather than the MIME header, and writes to `devices/<user id>/` in the public Blob store. If no usable Blob store is configured, the bytes are kept in Postgres instead and served from `/api/photos/<user id>/<photo id>`.
 
 Serials are unique across the whole register. If a serial belongs to another account, the API returns:
 
@@ -706,9 +706,9 @@ History filters interpret a date as the half-open range from the start of that d
 | `POST` | `/api/devices` | Member | Create a device owned by the session user. |
 | `PATCH` | `/api/devices/[id]` | Owner | Update a device; ownership is part of the query. |
 | `DELETE` | `/api/devices/[id]` | Owner | Soft-delete a device if it has no open visit. |
-| `POST` | `/api/uploads` | Member | Upload a JPEG, PNG, or WebP up to 5 MB to Vercel Blob. |
+| `POST` | `/api/uploads` | Member | Upload a JPEG, PNG, or WebP up to 5 MB to Vercel Blob, falling back to Postgres when Blob is unavailable. |
 
-`POST /api/uploads` returns `{ "url": "...", "pathname": "devices/<user id>/<uuid>.<ext>" }`. The URL is accepted later only if it is HTTPS, on the configured public Blob hostname, under the session user's prefix, and ends in `.jpg`, `.jpeg`, `.png`, or `.webp`.
+`POST /api/uploads` returns `{ "url": "...", "pathname": "devices/<user id>/<uuid>.<ext>" }`. The URL is either an HTTPS public Blob URL or a relative `/api/photos/<user id>/<photo id>` fallback. It is accepted later only if it is under the session user's photo prefix and matches the expected store or route shape.
 
 ### Door and scan APIs
 
@@ -936,14 +936,14 @@ Useful modules:
 | `src/lib/admin-data.ts` | Librarian queries, filters, pagination, exports. |
 | `src/lib/school-date.ts` | Timezone-safe day boundaries. |
 | `src/lib/time.ts` | School-timezone formatting and greetings. |
-| `src/lib/photos.ts` | Image signature detection and Blob URL validation. |
+| `src/lib/photos.ts` | Image signature detection and Blob/Postgres photo URL validation. |
 | `src/lib/member-rules.ts` | Shared limits, normalisation, and exact copy. |
 
 ---
 
 ## Deployment
 
-Vulcan is designed for Vercel with Neon Postgres and a public Vercel Blob store.
+Vulcan is designed for Vercel with Neon Postgres and an optional public Vercel Blob store.
 
 ### 1. Create the production database
 
@@ -986,9 +986,9 @@ https://vulcanlcs.vercel.app/api/auth/callback/google
 
 Publish the OAuth consent screen or keep the test-user list current.
 
-### 5. Connect Vercel Blob
+### 5. Connect Vercel Blob (optional)
 
-Create a public Blob store and add `BLOB_READ_WRITE_TOKEN`. Leave `BLOB_STORE_ID` blank unless the token does not expose the store id.
+Create a public Blob store and add `BLOB_READ_WRITE_TOKEN`. Leave `BLOB_STORE_ID` blank unless the token does not expose the store id. Without a token, photos are stored in Postgres and served from `/api/photos/`; no extra setup is needed.
 
 ### 6. Configure the cron job
 
@@ -1029,7 +1029,7 @@ Build and deploy. Verify:
 - [ ] `SCHOOL_DOMAIN` is the real school domain.
 - [ ] `ADMIN_EMAILS` contains the real librarian address(es).
 - [ ] `SCHOOL_TIME_ZONE` is the school's IANA timezone.
-- [ ] Public Blob store connected and photo upload tested.
+- [ ] Photo upload tested with Blob or the Postgres fallback.
 - [ ] `NEXT_PUBLIC_DEMO_MODE` is `false` or unset.
 - [ ] `vercel.json` cron schedule replaced with the real closing time.
 - [ ] Seed not run against production.
@@ -1094,7 +1094,7 @@ Neon's copy-on-write branches are useful for testing migrations and destructive 
 
 ### Logs
 
-Server errors are logged with `console.error` and appear in the Vercel function logs. The most useful messages are prefixed with the flow name, such as `Scan write failed`, `Auto-close failed`, `Vercel Blob upload failed`, or `Librarian sign-out failed`.
+Server errors are logged with `console.error` and appear in the Vercel function logs. The most useful messages are prefixed with the flow name, such as `Scan write failed`, `Auto-close failed`, `Vercel Blob upload failed; falling back to database storage`, `Photo storage failed`, or `Librarian sign-out failed`.
 
 ---
 
@@ -1109,8 +1109,9 @@ Server errors are logged with `console.error` and appear in the Vercel function 
 | `relation "users" does not exist` | Migrations have not run against this database. | `npm run db:migrate` with the correct `DATABASE_URL`/`DATABASE_URL_UNPOOLED`. |
 | `password authentication failed` | Wrong password, role, or database in the connection string. | Re-copy the Neon connection string; check for stale credentials. |
 | SSL warning from `pg` | `pg` treats `sslmode=require` as `verify-full` in the next major version. | The warning is informational. Use `sslmode=verify-full` explicitly, or add `uselibpqcompat=true` for libpq semantics. |
-| Photo upload returns 503 | `BLOB_READ_WRITE_TOKEN` is missing or invalid. | Create a public Blob store and set the token. Restart the server. |
-| Photo URL rejected when saving a laptop | The URL is not from the configured public Blob store or not under the user's prefix. | Confirm the store is public and the token/`BLOB_STORE_ID` matches the store that issued the URL. Re-upload the photo. |
+| Photo upload returns 502 | Both Blob and the Postgres fallback failed. | Check the function logs. A stale Blob token is handled automatically by the fallback, so a 502 usually means the database write failed. Confirm the latest migrations have run. |
+| Photo URL rejected when saving a laptop | The URL is neither a Blob URL on the configured public store nor a `/api/photos/<user id>/<photo id>` fallback belonging to this member. | Re-upload the photo. If you expect Blob URLs, confirm the store is public and the token/`BLOB_STORE_ID` matches. |
+| Photos are stored in Postgres instead of Blob | `BLOB_READ_WRITE_TOKEN` is missing or Blob rejected the upload. | Expected fallback. Set a valid token and redeploy to prefer Blob; existing Postgres photos keep working. |
 | Door screen says “Door codes aren't configured” | `TOKEN_SECRET` or `NEXT_PUBLIC_APP_URL` is missing. | Set both and restart/rebuild. `NEXT_PUBLIC_APP_URL` needs a rebuild in production. |
 | QR code points at the wrong host | `NEXT_PUBLIC_APP_URL` is stale or wrong. | Set the correct origin, no trailing slash, and rebuild. |
 | “That code has expired” | The 60-second code has passed. | Scan the code currently on the screen. |
@@ -1135,14 +1136,14 @@ Server errors are logged with `console.error` and appear in the Vercel function 
 - **Safe redirects.** Post-auth return paths are limited to same-origin relative paths.
 - **Secret isolation.** `AUTH_SECRET`, `TOKEN_SECRET`, `CRON_SECRET`, the Google client secret, the Neon password, and the Blob token are server-side secrets. Never expose them through `NEXT_PUBLIC_*`.
 - **Door tokens.** HS256, 60-second expiry, direction-bound, unique `jti`. Verification happens on both the page and the write route.
-- **Photo URL validation.** Uploads are written under the user's prefix; attached URLs must be HTTPS on the configured public Blob host and under that prefix.
+- **Photo URL validation.** Uploads are written under the user's prefix; attached URLs must be either HTTPS on the configured public Blob host under that prefix or a relative `/api/photos/<user id>/<photo id>` fallback.
 - **Image validation.** The upload route detects JPEG/PNG/WebP from file signatures rather than trusting the MIME header.
 - **SQL safety.** Drizzle parameterises queries. Dynamic filters are parsed and bounded instead of concatenated.
 - **Rate limiting.** Scans are limited in process. This is a double-tap guard, not a hard distributed quota.
 - **Soft deletes.** Devices are marked inactive instead of deleted, preserving visit history.
 - **Audit trail.** Visit and role changes write audit rows. Auto-close uses a single writable CTE so the visit and audit row cannot diverge.
 - **Reserved system account.** `auto-close@vulcan.invalid` cannot sign in because `.invalid` can never match a real school domain.
-- **PII.** The ledger holds names, school email addresses, admission numbers, laptop serials, and photos. Restrict database, Blob, and Vercel access to staff who need it. Public Blob URLs are unguessable but not access-controlled; do not upload sensitive documents.
+- **PII.** The ledger holds names, school email addresses, admission numbers, laptop serials, and photos. Restrict database, Blob, and Vercel access to staff who need it. Public Blob URLs and `/api/photos` URLs are unguessable but not access-controlled; do not upload sensitive documents.
 - **Production demo mode.** Leave `NEXT_PUBLIC_DEMO_MODE` off in production. Do not run the seed against real data.
 - **Secret rotation.** Rotate any credential that has been pasted into a chat, committed, or printed in a log. Rotate `CRON_SECRET` in Vercel at the same time as the app.
 

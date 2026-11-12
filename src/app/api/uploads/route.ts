@@ -1,5 +1,7 @@
 import { put } from "@vercel/blob";
 
+import { getDb } from "@/db";
+import { photos } from "@/db/schema";
 import { apiError, getApiUser, unauthorized } from "@/lib/api";
 import { MAX_PHOTO_BYTES } from "@/lib/member-rules";
 import { detectImage } from "@/lib/photos";
@@ -11,13 +13,6 @@ export async function POST(request: Request) {
 
   if (!user) {
     return unauthorized();
-  }
-
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    return apiError(
-      "Photo storage is not configured yet. Ask the librarian to check the Blob token.",
-      503,
-    );
   }
 
   const contentLength = Number(request.headers.get("content-length") ?? 0);
@@ -54,18 +49,46 @@ export async function POST(request: Request) {
   const pathname = `devices/${user.id}/${crypto.randomUUID()}.${image.extension}`;
 
   try {
-    const blob = await put(pathname, Buffer.from(bytes), {
-      access: "public",
-      contentType: image.contentType,
-      addRandomSuffix: false,
-    });
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      try {
+        const blob = await put(pathname, Buffer.from(bytes), {
+          access: "public",
+          contentType: image.contentType,
+          addRandomSuffix: false,
+        });
+
+        return Response.json({
+          url: blob.url,
+          pathname: blob.pathname,
+        });
+      } catch (error) {
+        // A stale or under-scoped token should not stop a member from
+        // registering a laptop. Keep the record in Postgres instead.
+        console.error(
+          "Vercel Blob upload failed; falling back to database storage",
+          error,
+        );
+      }
+    }
+
+    // No usable Blob store: keep the photo in Postgres and serve it through
+    // the public /api/photos route. This keeps laptop registration working on
+    // deployments that have a database but no object store.
+    const [photo] = await getDb()
+      .insert(photos)
+      .values({
+        ownerId: user.id,
+        contentType: image.contentType,
+        bytes: Buffer.from(bytes),
+      })
+      .returning({ id: photos.id });
 
     return Response.json({
-      url: blob.url,
-      pathname: blob.pathname,
+      url: `/api/photos/${user.id}/${photo.id}`,
+      pathname,
     });
   } catch (error) {
-    console.error("Vercel Blob upload failed", error);
+    console.error("Photo storage failed", error);
 
     return apiError("The photo couldn't be stored. Try again.", 502);
   }

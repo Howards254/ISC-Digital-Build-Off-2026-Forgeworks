@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  customType,
   index,
   jsonb,
   pgEnum,
@@ -11,6 +12,12 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+
+const bytea = customType<{ data: Buffer; driverData: Buffer }>({
+  dataType() {
+    return "bytea";
+  },
+});
 
 export const userRole = pgEnum("user_role", ["member", "gatekeeper", "admin"]);
 export const roleGrantRole = pgEnum("role_grant_role", ["gatekeeper", "admin"]);
@@ -58,6 +65,37 @@ export const roleGrants = pgTable(
     createdBy: text("created_by").notNull(),
   },
   (table) => [index("role_grants_ends_at_idx").on(table.endsAt)],
+);
+
+/**
+ * Fallback photo store for deployments without Vercel Blob. Photos are written
+ * here only when BLOB_READ_WRITE_TOKEN is absent and are served by the
+ * /api/photos route. The 5 MB ceiling matches MAX_PHOTO_BYTES.
+ */
+export const photos = pgTable(
+  "photos",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    ownerId: uuid("owner_id")
+      .notNull()
+      .references(() => users.id),
+    contentType: text("content_type").notNull(),
+    bytes: bytea("bytes").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index("photos_owner_id_idx").on(table.ownerId),
+    check(
+      "photos_content_type_check",
+      sql`${table.contentType} in ('image/jpeg', 'image/png', 'image/webp')`,
+    ),
+    check(
+      "photos_bytes_size_check",
+      sql`octet_length(${table.bytes}) between 1 and 5242880`,
+    ),
+  ],
 );
 
 export const devices = pgTable(
