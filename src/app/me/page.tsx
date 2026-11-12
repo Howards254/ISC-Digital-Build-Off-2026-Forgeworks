@@ -231,6 +231,7 @@ export default async function MePage({
 
           <AdmissionNumberForm
             initialValue={admissionNumber}
+            email={email}
             returnTo={returnTo}
           />
 

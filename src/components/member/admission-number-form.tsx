@@ -5,20 +5,24 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import {
+  admissionNumberFromEmail,
   MAX_ADMISSION_NUMBER_LENGTH,
   normalizeAdmissionNumber,
 } from "@/lib/member-rules";
 
 type AdmissionNumberFormProps = {
   initialValue: string | null;
+  email?: string;
   returnTo?: string | null;
 };
 
 export function AdmissionNumberForm({
   initialValue,
+  email = "",
   returnTo = null,
 }: AdmissionNumberFormProps) {
   const router = useRouter();
+  const placeholder = admissionNumberFromEmail(email) ?? "24-0187";
   const [value, setValue] = useState(initialValue ?? "");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -98,7 +102,7 @@ export function AdmissionNumberForm({
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? "admission-error" : "admission-hint"}
           disabled={pending}
-          placeholder="24-0187"
+          placeholder={placeholder}
           className="field-input uppercase sm:flex-1"
         />
         <button

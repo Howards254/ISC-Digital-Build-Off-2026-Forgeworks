@@ -23,6 +23,19 @@ export function normalizeAdmissionNumber(value: string): string {
   return value.trim().toUpperCase();
 }
 
+const UEAB_EMAIL_DOMAIN = "ueab.ac.ke";
+
+/** UEAB addresses carry the admission number before the @. Used as a hint only. */
+export function admissionNumberFromEmail(email: string): string | null {
+  const [local, domain, ...rest] = email.trim().toLowerCase().split("@");
+
+  if (!local || domain !== UEAB_EMAIL_DOMAIN || rest.length > 0) {
+    return null;
+  }
+
+  return normalizeAdmissionNumber(local);
+}
+
 export function isAcceptedPhotoType(value: string) {
   return ACCEPTED_PHOTO_MIME_TYPES.includes(
     value as (typeof ACCEPTED_PHOTO_MIME_TYPES)[number],

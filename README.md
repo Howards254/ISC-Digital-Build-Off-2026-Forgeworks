@@ -450,6 +450,8 @@ For a Workspace domain, the app passes Google's `hd` parameter to make the accou
 
 The admission number is stored on the member's own `users` row. It is trimmed, uppercased, and limited to 40 characters. The database check constraint requires the stored value to equal `upper(btrim(value))`.
 
+On the `/me` form the input's placeholder is derived from the member's email when the address is on `ueab.ac.ke`: the part before the `@`, in capitals. It is a hint only; the member still saves the number themselves.
+
 A member without an admission number is sent to `/me?next=…&reason=admission` before a scan can be recorded. Saving the number returns them to the scan.
 
 ### Registering a laptop
