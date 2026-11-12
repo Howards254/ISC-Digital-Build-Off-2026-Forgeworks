@@ -10,6 +10,25 @@ The interface is deliberately a ledger, not a dashboard: Fraunces for display, I
 
 ---
 
+## Quick look
+
+- **Live:** https://vulcanlcs.vercel.app. Sign in with a school Google account.
+- **Run it locally:**
+
+  ```bash
+  npm install
+  cp .env.example .env.local   # fill in the values; see Environment variables
+  npm run db:migrate
+  NEXT_PUBLIC_DEMO_MODE=true npm run seed   # optional demo ledger
+  npm run dev
+  ```
+
+- **Try the three roles:** a member scans the door code at `/scan`, a gatekeeper runs `/door/in` and `/door/out`, and the librarian watches `/admin`. With `NEXT_PUBLIC_DEMO_MODE=true` the door screens show a "Simulate scan" link, so the whole flow works on one machine.
+
+The full setup is in [Getting started](#getting-started).
+
+---
+
 ## Contents
 
 - [Overview](#overview)
@@ -1150,6 +1169,9 @@ Server errors are logged with `console.error` and appear in the Vercel function 
 
 ## Known limitations
 
+- **Door codes can be forwarded.** A door code is a signed link valid for 60 seconds and works from anywhere. Someone who is sent a photo of the code can record an entry without being at the door. Mitigations to consider: single-use codes per member, or a location or network check.
+- **Admission numbers are self-entered.** The member types their own number. It is not verified against the email, not unique, and can be changed at any time, so a member can record visits under another person's number.
+- **A borrowed serial can block the real owner.** Entering another member's registered serial as a borrowed laptop attaches it to that visit, flagged `borrowed`. The owner then gets "laptop already inside" until it is closed.
 - **In-process rate limiting.** Serverless instances do not share memory. A hard cross-instance quota needs a shared store such as Upstash Redis.
 - **Gatekeeper revocation lag.** Door pages and door APIs use the cached JWT role, so a revoked gatekeeper may retain access for up to five minutes. The librarian area is immediate.
 - **Single school.** The deployment is configured for one `SCHOOL_DOMAIN` and one timezone. Multi-tenant support would require schema and configuration changes.
